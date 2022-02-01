@@ -53,30 +53,43 @@ end
 # Plots.plot(data[!, :timestamp], data[!, :open], label=["Open"])
 function returns_dataframe(data)
     y = Vector{Float64}(undef, length(data."open"))
-    y[1]= 0.0
-    for i in range(2, length(data."open"))
-        y[i]= (data."open"[i] - data."open"[i-1])/data."open"[i-1]
+    for i in range(1,length(data."open")-1)
+        y[i]= (data."open"[i] - data."open"[i+1])/data."open"[i+1]
     end
+    y[5000]= 0.0
     data."returns"= y
     
 end
 
 function cumulative_returns_dataframe(data)
     y = Vector{Float64}(undef, length(data."open"))
-    y[1]= 0.0
-    for i in range(2, length(data."open"))
-        y[i]= data."returns"[i] + y[i-1]
+    y[5000]=0.0
+    for i in range(1,length(data."open")-1)
+        y[5000-i]= data."returns"[5000-i] + y[5001-i]
     end
     data."cumu_returns"= y
-    
 end
-eurusdRaw = AlphaVantage.fx_daily("EUR", "USD",outputsize="full")
+
+# function pre_avrage_log_returns(data)
+#     y = Vector{Float64}(undef, length(data."open"))
+#     y[1]= 0.0
+#     K= Int64(length(data."open")/2)
+#     t=0.0
+#     t-1 = 0.0
+#     for i in range(2, length(data.open))
+#         for j in range (2, i)
+#             t = log(y[i-K+j])
+
+
+    
+# end
+eurusdRaw = AlphaVantage.fx_daily("EUR", "JPY",outputsize="full")
 EURUSD = DataFrame(eurusdRaw)
 EURUSD[!, :timestamp] = Dates.Date.(EURUSD[!, :timestamp])
 
 returns_dataframe(EURUSD)
 cumulative_returns_dataframe(EURUSD)
-Plots.plot(EURUSD[!, :timestamp], EURUSD[!, :open], label=["Open"], dpi=1000,thickness_scaling=1, minorgrid = true)
+Plots.plot(EURUSD[!, :timestamp], EURUSD[!, :open], label=["Open"], dpi=500,thickness_scaling=1, minorgrid = true)
 
 
 ###QUANDL####
