@@ -115,7 +115,8 @@ end
 #             t = log(y[i-K+j])
     
 # end
-eurusdRaw = AlphaVantage.fx_daily("EUR", "JPY",outputsize="full")
+
+eurusdRaw = AlphaVantage.fx_daily("EUR", "USD",outputsize="full")
 EURUSD = DataFrame(eurusdRaw)
 EURUSD[!, :timestamp] = Dates.Date.(EURUSD[!, :timestamp])
 timearr = TimeArray(EURUSD, timestamp = :timestamp)
@@ -129,7 +130,7 @@ short1 = Option(data_open,"SHORT", Date(2022,02,03),Date(2022,02,09))
 long1 = Option(data_open,"LONG", Date(2022,02,03),Date(2022,02,09))
 
 println(short1.returns," ", long1.returns)
-#Plots.plot(y)
+Plots.plot(y)
 # returns_dataframe(EURUSD)
 # cumulative_returns_dataframe(EURUSD)
 
